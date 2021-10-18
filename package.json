@@ -1,0 +1,23 @@
+{
+  "displayName": "ObjectPooling",
+  "name": "com.pika.objectpooling",
+  "version": "0.0.1",
+  "unity": "2019.4",
+  "description": "Object Pooling is a great way to optimize your projects and lower the burden that is placed on the CPU when having to rapidly create and destroy GameObjects.",
+  "keywords": [
+    "mek",
+    "mek-package",
+    "object pooling"
+  ],
+  "category": "Libraries",
+  "author": {
+    "email": "emirhankenter@pika.games",
+    "name": "Memduh Emirhan Kenter",
+    "url": "https://pika.games"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/emirhankenter/objectpooling.git",
+    "revision": "f443b226ca681d87a3a31e245a70e6bc2769123c"
+  }
+}
