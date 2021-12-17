@@ -10,3 +10,7 @@
 ### Bug fix
 
 - Validates objects before spawn an object
+
+## [0.0.4] - 2021-12-17
+
+### Documentation added
