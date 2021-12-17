@@ -1,7 +1,7 @@
 {
   "displayName": "ObjectPooling",
   "name": "com.pika.objectpooling",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "unity": "2019.4",
   "description": "Object Pooling is a great way to optimize your projects and lower the burden that is placed on the CPU when having to rapidly create and destroy GameObjects.",
   "keywords": [

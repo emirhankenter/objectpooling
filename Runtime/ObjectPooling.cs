@@ -8,18 +8,18 @@ namespace Mek.ObjectPooling
     public class ObjectPooling : MonoBehaviour
     {
         private Transform _poolParent;
-        private Dictionary<int, List<Object>> _pool;
+        private Dictionary<int, List<Object>> _pool = new Dictionary<int, List<Object>>();
 
         private void Init()
         {
             _poolParent = transform;
-            _pool = new Dictionary<int, List<Object>>();
         }
 
         #region Component
 
         public T Spawn<T>(T prefab) where T : Component
         {
+            ValidateAllObjects();
             var hashCode = prefab.GetHashCode();
             var result = GetObj<T>(hashCode);
             T obj;
@@ -80,6 +80,7 @@ namespace Mek.ObjectPooling
         
         public GameObject Spawn(GameObject prefab)
         {
+            ValidateAllObjects();
             var hashCode = prefab.GetHashCode();
             var result = GetObj(hashCode);
             GameObject obj;
@@ -178,6 +179,7 @@ namespace Mek.ObjectPooling
         
         public void Recycle<T>(T obj) where T : Component
         {
+            if (!obj) return;
             obj.transform.SetParent(_poolParent, true);
             obj.gameObject.SetActive(false);
 
@@ -187,11 +189,31 @@ namespace Mek.ObjectPooling
         
         public void Recycle(GameObject obj)
         {
+            if (!obj) return;
             obj.transform.SetParent(_poolParent, true);
             obj.gameObject.SetActive(false);
 
             obj.TryGetComponent(out IRecycleCallbackReceiver recyclable);
             recyclable?.OnRecycle();
+        }
+
+        public void ValidateAllObjects()
+        {
+            var keys = new List<int>(_pool.Keys);
+            foreach (var key in keys)
+            {
+                if (!_pool.TryGetValue(key, out List<Object> objects)) continue;
+                var newObjects = new List<Object>();
+                var count = objects.Count;
+                
+                for (int i = 0; i < count; i++)
+                {
+                    var obj = objects[i];
+                    if (obj) newObjects.Add(obj);
+                }
+
+                _pool[key] = newObjects;
+            }
         }
         
         #endregion
