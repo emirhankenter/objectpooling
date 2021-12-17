@@ -14,3 +14,7 @@
 ## [0.0.4] - 2021-12-17
 
 ### Documentation added
+
+## [0.0.5] - 2021-12-18
+
+### Performance optimizations
