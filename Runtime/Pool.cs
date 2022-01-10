@@ -194,6 +194,15 @@ namespace Mek.ObjectPooling
             }
         }
 
+        public void RecycleAll()
+        {
+            while (_activeItems.Count > 0)
+            {
+                var item = _activeItems[0];
+                Recycle(item);
+            }
+        }
+
         private void SetGameObjectOfItemActive(T item, bool state)
         {
             var go = GetGameObject(item);
