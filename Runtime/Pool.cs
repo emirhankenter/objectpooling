@@ -170,15 +170,23 @@ namespace Mek.ObjectPooling
         
         public void Recycle(T item)
         {
+            if (item == null)
+            {
+                _activeItems.Remove(item);
+                Debug.LogError($"Trying to return null object to the pool! Type: {typeof(T)}");
+                return;
+                // throw new ArgumentNullException($"Trying to return null object to the pool! Type: {typeof(T)}");
+            }
+            
             if (_inactiveItems.Contains(item) && !_activeItems.Contains(item))
             {
-                Debug.LogError("Item is already recycled!");
+                Debug.LogWarning($"Item is already recycled! Type: {typeof(T)}");
                 return;
             }
 
             if (!_activeItems.Contains(item))
             {
-                throw new ArgumentException("Item seems inactivated! But not recycled!");
+                throw new ArgumentException($"Item seems inactivated! But not recycled!: Type: {typeof(T)}");
             }
 
             _activeItems.Remove(item);
@@ -200,6 +208,21 @@ namespace Mek.ObjectPooling
             {
                 var item = _activeItems[0];
                 Recycle(item);
+            }
+        }
+
+        public void DestroyAll()
+        {
+            RecycleAll();
+            
+            T item = null;
+
+            while (_inactiveItems.Count > 0)
+            {
+                item = _inactiveItems.Pop();
+                if (item == null) continue;
+                
+                Object.Destroy(GetGameObject(item));
             }
         }
 
