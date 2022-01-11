@@ -35,7 +35,6 @@ namespace Mek.ObjectPooling
             }
             else
             {
-                Debug.Log("Here");
                 _pool.Recycle(_particle);
             }
         }

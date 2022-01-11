@@ -42,7 +42,9 @@ There is only one method of installation available for the Object Pooling SDK:
 
 
 ## Usage
-###Creating Instance
+
+### Creating Instance
+
 There is two method of creating a pool:
 
 1. Creating directly from the ObjectPooling class:
@@ -119,7 +121,7 @@ exampleObjectPool.RecycleAll();
 exampleObjectPool.DestroyAll();
 ```
 
-####Particle Pooling
+#### Particle Pooling
 To use particles with this system, you need to do two steps in target prefab:
 1. Set "Stop Action" to "CallBack" in particle system
 2. Add Component PooledParticleObject

@@ -18,3 +18,15 @@
 ## [0.0.5] - 2021-12-18
 
 ### Performance optimizations
+
+## [0.1.0] - 2022-01-11
+
+### General System Improvements
+
+- New Pool class implementation
+
+## [0.1.2] - 2022-01-11
+
+### System Improvements
+
+- Pool is cached inside PooledParticleObject
