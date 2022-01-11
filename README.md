@@ -42,26 +42,84 @@ There is only one method of installation available for the Object Pooling SDK:
 
 
 ## Usage
+###Creating Instance
+There is two method of creating a pool:
 
+1. Creating directly from the ObjectPooling class:
 ```C#
-// You can spawn objects just by one code line like this
-ObjectPooling.Instance.Spawn(prefab);
-// Or
-prefab.Spawn();
+//Create a pool from ObjectPooling.Instance with desired prefab to be pooled as parameter
+var exampleObjectPool = ObjectPooling.Instance.CreatePool(exampleObjectPrefab);
+
+//You can expand pool options with these methods
+exampleObjectPool.AsParent(transform); // Default transfrom of inactive items in the pool
+exampleObjectPool.WithInitialSize(10); // Initial size o the pool
+```
+
+2. Creating the instance
+```C#
+//Create a pool directly
+var exampleObjectPool = new Pool<ExampleObject>(exampleObjectPrefab);
 
 // Once you want to save the object to the pool, you need to call recycle method
-ObjectPooling.Instance.Recycle(prefab)
+ObjectPooling.Instance.Recycle(clone);
 // Or
-prefab.Recycle();
+clone.Recycle();
 
 // You can pass parameters to the Spawn method like 
 // Transform as parent
 // Vector3 as global position
 // Quaternion as global rotation
-prefab.Spawn(parent, position, rotation)
+var clone = prefab.Spawn(parent, position, rotation);
 ```
-####Particle Pooling
 
+### Spawn Objects
+
+```C#
+// Spawn object from the pool
+var clone = exampleObjectPool.Spawn();
+
+//If you trying to access the pool from other scopes, and you have the reference of the prefab
+//You can access to that pool by calling this method
+var exampleObjectPool = ObjectPooling.Instance.GetPool(prefab);
+//Then spawn from that pool
+var clone = exampleObjectPool.Spawn();
+
+// You can pass parameters to the Spawn method like as Unity.Object.Instantiate(...) method
+// Transform as parent
+// Vector3 as global position
+// Quaternion as global rotation
+var clone = exampleObjectPool.Spawn(parent, position, rotation);
+
+// If you have the reference of the prefab, you can just call:
+prefab.Spawn(); // This method automaticly creates the pool by itself with default options
+
+
+// Once you want to save the object to the pool, you need to call recycle method
+ObjectPooling.Instance.Recycle(clone);
+// Or
+clone.Recycle();
+```
+
+### Recycle Objects
+
+```C#
+// Once you want to return the object to the pool, you need to call recycle method from the pool
+exampleObject.Recycle(clone);
+
+// If you have not reference of the pool you can just call these
+// **Reminder: Calling Recycle() directly from the related pool as mentioned above is recommended in concern of performance!***
+ObjectPooling.Instance.Recycle(clone);
+// Or
+clone.Recycle();
+
+//All clones can be returned to the pool by this method
+exampleObjectPool.RecycleAll();
+
+//All clones can be destroyed including actives and inactives by this method
+exampleObjectPool.DestroyAll();
+```
+
+####Particle Pooling
 To use particles with this system, you need to do two steps in target prefab:
 1. Set "Stop Action" to "CallBack" in particle system
 2. Add Component PooledParticleObject
@@ -71,17 +129,28 @@ To use particles with this system, you need to do two steps in target prefab:
 <br>
 <br>
 
-####IRecycleCallbackReceiver
-This interface help you to receive a callback when object has been recycle 
+#### Callbacks
+1. <i>ICreationCallbackReceiver</i>
+2. <i>ISpawnCallbackReceiver</i>
+3. <i>IRecycleCallbackReceiver</i>
+
+These interfaces help you to receive callbacks when object is created, spawned and recycled
 ```C#
-    public class TestObject : MonoBehaviour, IRecycleCallbackReceiver
+    public class ExampleObject : MonoBehaviour, ICreationCallbackReceiver, ISpawnCallbackReceiver, IRecycleCallbackReceiver
     {
+        public void OnCreated()
+        {
+        }
+        
+        public void OnSpawned()
+        {
+        }
+        
         public void OnRecycle()
         {
-            Debug.Log("Test object has been recycled");
         }
     }
 ```
 
 ## License
-[Modified MIT License](LICENSE)
+[Modified MIT License](LICENSE.md)
