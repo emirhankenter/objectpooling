@@ -93,6 +93,18 @@ namespace Mek.ObjectPooling
             return CreatePool(prefab);
         }
 
+        public Pool<T> GetPool<T>(int hashCode) where T : Object
+        {
+            Pool<T> pool = null;
+            
+            if (_poolDictionary.TryGetValue(hashCode, out PoolBase poolbase))
+            {
+                pool = poolbase as Pool<T>;
+            }
+
+            return pool;
+        }
+
         /// <summary>
         /// Spawns prefab from the pool if any exists, if not instantiates new one
         /// </summary>
@@ -183,11 +195,10 @@ namespace Mek.ObjectPooling
         public void Recycle<T>(T item) where T : Object
         {
             if (!item) return;
+            
             var go = GetGameObject(item);
 
-            var pooledObject = go.GetComponent<PoolObject>();
-
-            if (pooledObject.TryGetComponent(out IPoolObject poolObject))
+            if (go.TryGetComponent<IPoolObject>(out var poolObject))
             {
                 var prefabHashCode = poolObject.GetPrefabHashCode();
 
