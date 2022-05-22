@@ -10,40 +10,9 @@ namespace Mek.ObjectPooling
         private Transform _poolParent;
         private readonly Dictionary<int, PoolBase> _poolDictionary = new Dictionary<int, PoolBase>();
 
-        [RuntimeInitializeOnLoadMethod]
-        public static void OnRuntimeInitialized()
-        {
-            _instance = new GameObject("ObjectPool").AddComponent<ObjectPooling>();
-            DontDestroyOnLoad(_instance);
-            _instance.Init();
-        }
-
-        private void OnDestroy()
-        {
-            Dispose();
-        }
-        
         private void Init()
         {
-            PoolBase.PoolInitialized += OnPoolInitialized;
             _poolParent = transform;
-        }
-
-        private void Dispose()
-        {
-            PoolBase.PoolInitialized -= OnPoolInitialized;
-        }
-
-        private void OnPoolInitialized(PoolBase poolBase)
-        {
-            var obj = poolBase.Object;
-            var hashCode = obj.GetHashCode();
-            if (_poolDictionary.ContainsKey(hashCode))
-            {
-                throw new ArgumentException("Tried to create a pool from outside, even tough there is already a pool created before! Aborting from creating!");
-            }
-
-            _poolDictionary[hashCode] = poolBase;
         }
 
         public Pool<T> CreatePool<T>(T prefab) where T : Object
@@ -55,16 +24,27 @@ namespace Mek.ObjectPooling
                 throw new ArgumentException("Trying to create a pool even tough there is already a pool created before!");
             }
             
-            pool = new Pool<T>(prefab, false)
+            pool = new Pool<T>(prefab)
                 .AsParent(transform);
             _poolDictionary[prefab.GetHashCode()] = pool;
             
             return pool;
         }
 
+        public T InitializePool<T>(PoolBase poolBase) where T : PoolBase
+        {
+            var hashCode = poolBase.Object.GetHashCode();
+            if (_poolDictionary.ContainsKey(hashCode))
+            {
+                throw new ArgumentException($"Pool with hashcode {hashCode}, initialized before!");
+            }
+
+            _poolDictionary[hashCode] = poolBase;
+            return poolBase as T;
+        }
+
         public Pool<T> GetPoolWithId<T>(string id) where T : Object
         {
-
             foreach (var pair in _poolDictionary)
             {
                 if (pair.Value.Id != id) continue;

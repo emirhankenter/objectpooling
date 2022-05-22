@@ -14,14 +14,11 @@ namespace Mek.ObjectPooling
         private readonly List<T> _activeItems = new List<T>();
         private readonly Stack<T> _inactiveItems = new Stack<T>();
 
-        public Pool(T prefab, bool invokeInitializeEvent = true)
+        public Pool(T prefab)
         {
             Object = prefab;
             Prefab = prefab;
-            if (invokeInitializeEvent)
-            {
-                PoolInitialized?.Invoke(this);
-            }
+
         }
 
         public Pool<T> AsParent(Transform parent)
