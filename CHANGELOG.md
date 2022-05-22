@@ -30,3 +30,9 @@
 ### System Improvements
 
 - Pool is cached inside PooledParticleObject
+- 
+## [0.1.3] - 2022-05-22
+
+### Bug fix
+
+- Constructor based initialization revoked

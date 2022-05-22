@@ -60,18 +60,8 @@ exampleObjectPool.WithInitialSize(10); // Initial size o the pool
 2. Creating the instance
 ```C#
 //Create a pool directly
-var exampleObjectPool = new Pool<ExampleObject>(exampleObjectPrefab);
-
-// Once you want to save the object to the pool, you need to call recycle method
-ObjectPooling.Instance.Recycle(clone);
-// Or
-clone.Recycle();
-
-// You can pass parameters to the Spawn method like 
-// Transform as parent
-// Vector3 as global position
-// Quaternion as global rotation
-var clone = prefab.Spawn(parent, position, rotation);
+var pool = new Pool<ExampleObject>(exampleObjectPrefab);
+exampleObjectPool = ObjectPooling.Instance.InitializePool<Pool<ExampleObject>>(pool);
 ```
 
 ### Spawn Objects
@@ -94,12 +84,6 @@ var clone = exampleObjectPool.Spawn(parent, position, rotation);
 
 // If you have the reference of the prefab, you can just call:
 prefab.Spawn(); // This method automaticly creates the pool by itself with default options
-
-
-// Once you want to save the object to the pool, you need to call recycle method
-ObjectPooling.Instance.Recycle(clone);
-// Or
-clone.Recycle();
 ```
 
 ### Recycle Objects
